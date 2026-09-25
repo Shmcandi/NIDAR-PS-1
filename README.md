@@ -6,7 +6,7 @@ ROLLS
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 💻 Software & Autonomy Sub-Team
-
+ 
 ### 1. Edge AI Pipeline Architect
 * **Domain:** Computer Vision / Edge Computing
 * **Hardware/Software:** Primary edge AI processor, daylight optical camera, computer vision model.
