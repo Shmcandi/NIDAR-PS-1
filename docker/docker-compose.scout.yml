@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  scout-vision:
+    image: scout-vision:latest
+    container_name: nidar_scout_vision
+    pull_policy: never
+    restart: unless-stopped
+    ipc: host
+    privileged: true
+    devices:
+      - "/dev/video0:/dev/video0"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CAMERA_DEVICE=/dev/video0
+      - SHM_PATH=/dev/shm/scout_detections
+    command: ["python3", "vision_node.py", "--camera", "/dev/video0"]
+
+  scout-geolocation:
+    image: scout-geolocation:latest
+    container_name: nidar_scout_geolocation
+    pull_policy: never
+    restart: unless-stopped
+    ipc: host
+    privileged: true
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MAVLINK_PORT=/dev/ttyACM0
+      - SHM_PATH=/dev/shm/scout_detections
+    depends_on:
+      - scout-vision
+    command: ["python3", "geolocation_node.py"]

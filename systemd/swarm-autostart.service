@@ -1,0 +1,25 @@
+[Unit]
+Description=NIDAR RescueSwarm Air-Gapped Autostart & Container Orchestration Service
+After=network.target local-fs.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/nidar
+
+# 1. Enforce strict Rule 5 RF air-gap before starting mission compute
+ExecStartPre=/usr/sbin/rfkill block all
+
+# 2. Launch pre-built local container stack with no network pull
+ExecStart=/usr/bin/docker compose -f /opt/nidar/docker/docker-compose.scout.yml up -d --no-build
+
+# Teardown on shutdown
+ExecStop=/usr/bin/docker compose -f /opt/nidar/docker/docker-compose.scout.yml down
+
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+# Dockerfile for Role 4: Scout Geolocation & Target Routing Engine
+# Target: NVIDIA Jetson Orin Nano Super
+# Wired directly to src/naseef_role2_geolocation
+FROM python:3.11-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY src/naseef_role2_geolocation/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/naseef_role2_geolocation/ /app/
+
+CMD ["python3", "geolocation_node.py"]

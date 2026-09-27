@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  delivery-mission:
+    image: delivery-mission:latest
+    container_name: nidar_delivery_mission
+    pull_policy: never
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - "/dev/ttyAMA0:/dev/ttyAMA0"
+      - "/dev/gpiochip4:/dev/gpiochip4"
+    volumes:
+      - "/dev:/dev"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - UART_PORT=/dev/ttyAMA0
+      - BAUD_RATE=921600
+    command: ["python3", "delivery_mission_node.py"]
